@@ -1,54 +1,38 @@
-import fitz  # PyMuPDF  (only dependency)
+import pypdfium2 as pdfium  # PDF rendering  (pip install pypdfium2)
+from PIL import Image       # image stacking  (pip install pillow)
 import argparse
 import sys
 from pathlib import Path
-from tqdm import tqdm  # progress bar  (pip install tqdm)
+from tqdm import tqdm       # progress bar    (pip install tqdm)
 
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _render_pages(pdf_document: fitz.Document, matrix: fitz.Matrix, label: str = "") -> list:
-    """Render every page and return a list of fitz RGB Pixmaps."""
-    pixmaps = []
+def _render_pages(pdf_doc: pdfium.PdfDocument, scale: float, label: str = "") -> list:
+    """Render every page and return a list of PIL RGB Images."""
+    images = []
     desc = f"Rendering {label}" if label else "Rendering pages"
-    for page in tqdm(pdf_document, desc=desc, unit="page", leave=True):
-        pix = page.get_pixmap(matrix=matrix, colorspace=fitz.csRGB, alpha=False)
-        pixmaps.append(pix)
-    return pixmaps
+    for page in tqdm(pdf_doc, desc=desc, unit="page", leave=True):
+        bitmap = page.render(scale=scale)
+        images.append(bitmap.to_pil().convert("RGB"))
+    return images
 
 
-def _stack_pixmaps(pixmaps: list) -> fitz.Pixmap:
+def _stack_images(images: list) -> Image.Image:
     """
-    Stack a list of fitz Pixmaps vertically into one combined Pixmap.
+    Stack a list of PIL Images vertically into one combined image.
 
-    Uses PyMuPDF's writable samples_mv memoryview (available since PyMuPDF 1.18).
     Pages narrower than the widest page are left-aligned on a white background.
     """
-    max_width    = max(p.width  for p in pixmaps)
-    total_height = sum(p.height for p in pixmaps)
-    n = 3  # RGB channels (no alpha)
-
-    # Create an empty RGB pixmap and fill it white
-    combined = fitz.Pixmap(
-        fitz.csRGB,
-        fitz.IRect(0, 0, max_width, total_height),
-        False,  # no alpha
-    )
-    combined.set_rect(combined.irect, (255, 255, 255))
-
-    # Write each page's rows into the combined buffer via a writable memoryview
-    mv = combined.samples_mv          # writable memoryview (PyMuPDF >= 1.18)
+    max_width    = max(img.width  for img in images)
+    total_height = sum(img.height for img in images)
+    combined     = Image.new("RGB", (max_width, total_height), (255, 255, 255))
     y_offset = 0
-    for pix in pixmaps:
-        src = pix.samples             # bytes: row-major RGB
-        for row in range(pix.height):
-            dst_pos = (y_offset + row) * max_width * n
-            src_pos = row * pix.width * n
-            mv[dst_pos : dst_pos + pix.width * n] = src[src_pos : src_pos + pix.width * n]
-        y_offset += pix.height
-
+    for img in images:
+        combined.paste(img, (0, y_offset))
+        y_offset += img.height
     return combined
 
 
@@ -100,34 +84,30 @@ def pdf_to_jpg(
     if output_name is None:
         output_name = pdf_path.stem
 
-    zoom   = dpi / 72
-    matrix = fitz.Matrix(zoom, zoom)
-
-    pdf_document = None
+    scale  = dpi / 72
+    pdf_doc = pdfium.PdfDocument(str(pdf_path))
     try:
-        pdf_document = fitz.open(str(pdf_path))
-        total   = len(pdf_document)
+        total  = len(pdf_doc)
         print(f"\n'{pdf_path.name}'  —  {total} page(s), {dpi} DPI")
-        pixmaps = _render_pages(pdf_document, matrix, label=_label or pdf_path.name)
+        images = _render_pages(pdf_doc, scale, label=_label or pdf_path.name)
     finally:
-        if pdf_document is not None:
-            pdf_document.close()
+        pdf_doc.close()
 
     # -----------------------------------------------------------------------
     # Save
     # -----------------------------------------------------------------------
     if per_page:
         # One file per page  →  <name>_1.jpg, <name>_2.jpg, …
-        for i, pix in enumerate(pixmaps):
+        for i, img in enumerate(images):
             output_file = output_folder / f"{output_name}_{i + 1}.jpg"
-            pix.save(str(output_file), jpg_quality=quality)
+            img.save(str(output_file), "JPEG", quality=quality)
             print(f"  Saved: {output_file}")
         print(f"Done. {total} file(s) saved to '{output_folder}'.")
     else:
         # All pages combined into one file  →  <name>.jpg
-        combined    = _stack_pixmaps(pixmaps)
+        combined    = _stack_images(images)
         output_file = output_folder / f"{output_name}.jpg"
-        combined.save(str(output_file), jpg_quality=quality)
+        combined.save(str(output_file), "JPEG", quality=quality)
         print(f"  Saved: {output_file}")
         print(f"Done. All {total} page(s) combined into '{output_file}'.")
 
@@ -157,8 +137,8 @@ def batch_convert(
         dpi (int):           Render resolution in DPI (default: 150).
         quality (int):       JPEG quality 1–100 (default: 95).
     """
-    folder     = Path(folder)
-    pdf_files  = sorted(folder.glob("*.pdf"))
+    folder    = Path(folder)
+    pdf_files = sorted(folder.glob("*.pdf"))
 
     if not pdf_files:
         print(f"No PDF files found in '{folder}'.")
@@ -190,8 +170,8 @@ def batch_convert(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=(
-            "Convert PDF pages to JPG image(s).  Requires: PyMuPDF + tqdm\n"
-            "  pip install pymupdf tqdm\n\n"
+            "Convert PDF pages to JPG image(s).  Requires: pypdfium2, Pillow, tqdm\n"
+            "  pip install -r requirements.txt\n\n"
             "Pass a FILE to convert one PDF.\n"
             "Pass a FOLDER to batch-convert all PDFs inside it."
         ),
