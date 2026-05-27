@@ -416,3 +416,13 @@ This project is licensed under the **GNU Affero General Public License v3.0 (AGP
 
 You are free to use, modify, and distribute this code, but any modified version must also be released under AGPL v3 with source code made available.  
 See the [LICENSE](LICENSE) file for full details.
+
+---
+
+## Support
+
+If this tool saved you time, consider supporting its development:
+
+[![Sponsor on GitHub](https://img.shields.io/badge/Sponsor-%E2%9D%A4-pink?logo=github)](https://github.com/sponsors/csbisht)
+
+Your support helps keep this project maintained and growing. Thank you! 🙏
