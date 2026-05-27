@@ -389,6 +389,9 @@ python3 pdf-to-jpg.py myfile.pdf output_dir -p --name report
 
 ---
 
-## Licence
+## License
 
-Free to use and modify for personal or commercial use.
+This project is licensed under the **GNU Affero General Public License v3.0 (AGPL v3)**.
+
+You are free to use, modify, and distribute this code, but any modified version must also be released under AGPL v3 with source code made available.  
+See the [LICENSE](LICENSE) file for full details.
