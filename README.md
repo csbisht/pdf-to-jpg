@@ -1,7 +1,7 @@
 # pdf-to-jpg
 
 A lightweight command-line tool that converts any PDF file into JPG image(s)
-using two dependencies — [PyMuPDF](https://pymupdf.readthedocs.io/) and [tqdm](https://tqdm.github.io/).
+using three dependencies — [pypdfium2](https://pypdfium2.readthedocs.io/), [Pillow](https://python-pillow.org/), and [tqdm](https://tqdm.github.io/).
 
 ---
 
@@ -28,7 +28,7 @@ This tool bridges that gap:
 
 - No paid software needed (unlike Adobe Acrobat).
 - No internet connection required — everything runs on your computer.
-- No complicated setup — one Python file, one package.
+- No complicated setup — one Python file, three lightweight packages.
 - Works on Linux, macOS, and Windows.
 
 ---
@@ -55,7 +55,7 @@ This tool bridges that gap:
 | **Windows** (10 / 11) | ✅ Yes |
 | Any system with **Python 3.8+** installed | ✅ Yes |
 
-> The tool uses only standard Python libraries + PyMuPDF + tqdm.  
+> The tool uses only standard Python libraries + pypdfium2 + Pillow + tqdm.  
 > No GUI, no browser, no cloud service is needed.
 
 ---
@@ -102,14 +102,15 @@ python  --version        # Windows
 
 #### 📦 What does `pip install -r requirements.txt` install?
 
-The file `requirements.txt` lists the two packages this tool needs:
+The file `requirements.txt` lists the three packages this tool needs:
 
 | Package | What it does | Why it is needed |
 |---------|-------------|-----------------|
-| **PyMuPDF** (`fitz`) | Reads and renders PDF files | Without this, the script cannot open or process any PDF |
+| **pypdfium2** | Reads and renders PDF pages using Google's PDFium engine | Without this, the script cannot open or process any PDF |
+| **Pillow** | Handles image processing and saving | Used to stack pages into one image and save the final JPG output |
 | **tqdm** | Shows a live progress bar in the terminal | Lets you see how many pages have been rendered so far — especially useful for large PDFs |
 
-Running `pip install -r requirements.txt` installs **both packages at once** — you don't have to install them one by one.
+Running `pip install -r requirements.txt` installs **all three packages at once** — you don't have to install them one by one.
 
 > ✅ **Will this affect my other Python projects or system packages?**  
 > **No — not at all.** Because you are installing inside a virtual environment (`myenv`),
@@ -178,10 +179,10 @@ pip install -r requirements.txt
 #### Verify the installation
 
 ```bash
-python3 -c "import fitz; print(fitz.__doc__)"   # Linux / macOS
-python  -c "import fitz; print(fitz.__doc__)"   # Windows
+python3 -c "import pypdfium2; from PIL import Image; import tqdm; print('All packages OK')"   # Linux / macOS
+python  -c "import pypdfium2; from PIL import Image; import tqdm; print('All packages OK')"   # Windows
 ```
-You should see a short description of PyMuPDF — that means it is working.
+You should see `All packages OK` — that means all three packages are installed and working.
 
 #### Deactivate or exit from the virtual environment when you are done with PDF to JPG conversion (optional)
 
@@ -265,7 +266,7 @@ If you run out of memory, use **per-page mode** (`-p`) instead.
 ### Step 2 — Navigate to the project folder and activate the environment
 
 > ⚠️ You **must** activate the virtual environment every time you open a new
-> terminal. Without this, Python will not find PyMuPDF.
+> terminal. Without this, Python will not find the required packages.
 
 ```bash
 # Linux / macOS
@@ -401,7 +402,7 @@ python3 pdf-to-jpg.py myfile.pdf output_dir -p --name report
 
 | Error message | Cause | Fix |
 |---|---|---|
-| `ModuleNotFoundError: No module named 'fitz'` or `No module named 'tqdm'` | Virtual environment not active, or dependencies not installed | Activate the environment first (`source myenv/bin/activate`), then `pip install -r requirements.txt` |
+| `ModuleNotFoundError: No module named 'pypdfium2'` or `'PIL'` or `'tqdm'` | Virtual environment not active, or dependencies not installed | Activate the environment first (`source myenv/bin/activate`), then `pip install -r requirements.txt` |
 | `running scripts is disabled` (Windows PowerShell) | PowerShell execution policy blocks scripts | Run `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` once as Administrator |
 | `myenv\Scripts\activate.bat` not found | Virtual environment was not created | Run `python -m venv myenv` inside the project folder |
 | `FileNotFoundError: PDF not found` | Wrong path to the PDF file | Double-check the filename and that you are in the right folder |
@@ -412,9 +413,9 @@ python3 pdf-to-jpg.py myfile.pdf output_dir -p --name report
 
 ## License
 
-This project is licensed under the **GNU Affero General Public License v3.0 (AGPL v3)**.
+This project is licensed under the **MIT License**.
 
-You are free to use, modify, and distribute this code, but any modified version must also be released under AGPL v3 with source code made available.  
+You are free to use, modify, and distribute this code in any project — personal, commercial, or open source — with no restrictions.  
 See the [LICENSE](LICENSE) file for full details.
 
 ---
