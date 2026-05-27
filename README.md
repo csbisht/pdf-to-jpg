@@ -1,7 +1,7 @@
 # pdf-to-jpg
 
 A lightweight command-line tool that converts any PDF file into JPG image(s)
-using **only one dependency** — [PyMuPDF](https://pymupdf.readthedocs.io/).
+using two dependencies — [PyMuPDF](https://pymupdf.readthedocs.io/) and [tqdm](https://tqdm.github.io/).
 
 ---
 
@@ -55,7 +55,7 @@ This tool bridges that gap:
 | **Windows** (10 / 11) | ✅ Yes |
 | Any system with **Python 3.8+** installed | ✅ Yes |
 
-> The tool uses only standard Python libraries + PyMuPDF.  
+> The tool uses only standard Python libraries + PyMuPDF + tqdm.  
 > No GUI, no browser, no cloud service is needed.
 
 ---
@@ -90,13 +90,34 @@ python  --version        # Windows
 
 ---
 
-### 4.2 Set up a virtual environment and install PyMuPDF
+### 4.2 Set up a virtual environment and install dependencies
 
 > **Why a virtual environment?**  
 > Installing packages directly (`pip install`) writes files into your global
 > Python installation. This can break other tools on your system over time.  
 > A **virtual environment** is an isolated, throwaway Python sandbox — safe,
 > clean, and easy to delete if something goes wrong.
+
+---
+
+#### 📦 What does `pip install -r requirements.txt` install?
+
+The file `requirements.txt` lists the two packages this tool needs:
+
+| Package | What it does | Why it is needed |
+|---------|-------------|-----------------|
+| **PyMuPDF** (`fitz`) | Reads and renders PDF files | Without this, the script cannot open or process any PDF |
+| **tqdm** | Shows a live progress bar in the terminal | Lets you see how many pages have been rendered so far — especially useful for large PDFs |
+
+Running `pip install -r requirements.txt` installs **both packages at once** — you don't have to install them one by one.
+
+> ✅ **Will this affect my other Python projects or system packages?**  
+> **No — not at all.** Because you are installing inside a virtual environment (`myenv`),
+> everything stays completely isolated inside that folder.  
+> Your system Python, other projects, and any previously installed packages are
+> **never touched**. If you delete the `myenv` folder, it is as if nothing was ever installed.
+
+---
 
 #### Linux / macOS
 
@@ -110,8 +131,8 @@ python3 -m venv myenv
 # 3. Activate it  ← you must do this every time you open a new terminal
 source myenv/bin/activate
 
-# 4. Install the only dependency
-pip install pymupdf
+# 4. Install all dependencies
+pip install -r requirements.txt
 ```
 
 You will see `(myenv)` at the start of your prompt when the environment is active.
@@ -128,8 +149,8 @@ python -m venv myenv
 :: 3. Activate it  ← you must do this every time you open a new terminal
 myenv\Scripts\activate.bat
 
-:: 4. Install the only dependency
-pip install pymupdf
+:: 4. Install all dependencies
+pip install -r requirements.txt
 ```
 
 #### Windows (PowerShell)
@@ -144,8 +165,8 @@ python -m venv myenv
 # 3. Activate it  ← you must do this every time you open a new terminal
 myenv\Scripts\Activate.ps1
 
-# 4. Install the only dependency
-pip install pymupdf
+# 4. Install all dependencies
+pip install -r requirements.txt
 ```
 
 > **PowerShell note:** if you see a "running scripts is disabled" error, run
@@ -380,7 +401,7 @@ python3 pdf-to-jpg.py myfile.pdf output_dir -p --name report
 
 | Error message | Cause | Fix |
 |---|---|---|
-| `ModuleNotFoundError: No module named 'fitz'` | Virtual environment not active, or PyMuPDF not installed | Activate the environment first (`source myenv/bin/activate`), then `pip install pymupdf` |
+| `ModuleNotFoundError: No module named 'fitz'` or `No module named 'tqdm'` | Virtual environment not active, or dependencies not installed | Activate the environment first (`source myenv/bin/activate`), then `pip install -r requirements.txt` |
 | `running scripts is disabled` (Windows PowerShell) | PowerShell execution policy blocks scripts | Run `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` once as Administrator |
 | `myenv\Scripts\activate.bat` not found | Virtual environment was not created | Run `python -m venv myenv` inside the project folder |
 | `FileNotFoundError: PDF not found` | Wrong path to the PDF file | Double-check the filename and that you are in the right folder |
