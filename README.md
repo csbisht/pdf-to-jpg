@@ -421,7 +421,7 @@ See the [LICENSE](LICENSE) file for full details.
 
 ## Support
 
-If this tool saved you time, consider supporting its development:
+If this tool has saved you time, consider supporting its development:
 
 [![Sponsor on GitHub](https://img.shields.io/badge/Sponsor-%E2%9D%A4-pink?logo=github)](https://github.com/sponsors/csbisht)
 
