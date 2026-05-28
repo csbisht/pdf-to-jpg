@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name            = "pdf-to-jpg"
+version         = "0.2.0"
+description     = "Convert PDF pages to JPG images — combined or per-page, with batch folder support"
+readme          = "README.md"
+license         = { file = "LICENSE" }
+authors         = [{ name = "Chandan Bisht", email = "csbisht1@gmail.com" }]
+requires-python = ">=3.9"
+keywords        = ["pdf", "jpg", "image", "converter", "cli", "pypdfium2"]
+classifiers     = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Environment :: Console",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "pypdfium2>=4.0",
+    "Pillow>=10.0.0",
+    "tqdm>=4.65",
+]
+
+[project.urls]
+Homepage   = "https://github.com/csbisht/pdf-to-jpg"
+Repository = "https://github.com/csbisht/pdf-to-jpg"
+Issues     = "https://github.com/csbisht/pdf-to-jpg/issues"
+Changelog  = "https://github.com/csbisht/pdf-to-jpg/blob/main/CHANGELOG.md"
+
+[project.scripts]
+pdf-to-jpg = "pdf_to_jpg:main"
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
