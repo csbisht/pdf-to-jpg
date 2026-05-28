@@ -35,7 +35,7 @@ Issues     = "https://github.com/csbisht/pdf-to-jpg/issues"
 Changelog  = "https://github.com/csbisht/pdf-to-jpg/blob/main/CHANGELOG.md"
 
 [project.scripts]
-pdf-to-jpg = "pdf_to_jpg:main"
+pdf-to-jpg = "pdf_to_jpg:main"   # installs `pdf-to-jpg` command after pip install
 
 [tool.ruff]
 line-length = 100

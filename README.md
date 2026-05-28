@@ -57,7 +57,7 @@ This tool bridges that gap:
 | **Linux** (Ubuntu, Debian, Fedora, Arch, etc.) | ✅ Yes |
 | **macOS** (Intel & Apple Silicon) | ✅ Yes |
 | **Windows** (10 / 11) | ✅ Yes |
-| Any system with **Python 3.8+** installed | ✅ Yes |
+| Any system with **Python 3.9+** installed | ✅ Yes |
 
 > The tool uses only standard Python libraries + pypdfium2 + Pillow + tqdm.  
 > No GUI, no browser, no cloud service is needed.
