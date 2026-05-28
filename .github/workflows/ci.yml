@@ -35,7 +35,7 @@ jobs:
           pip install -r requirements-dev.txt
 
       - name: Lint with ruff
-        run: ruff check pdf-to-jpg.py
+        run: ruff check pdf_to_jpg.py
 
       - name: Run smoke tests
         run: pytest tests/ -v
