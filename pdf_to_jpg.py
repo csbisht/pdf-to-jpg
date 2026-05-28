@@ -84,7 +84,7 @@ def pdf_to_jpg(
     if output_name is None:
         output_name = pdf_path.stem
 
-    scale  = dpi / 72
+    scale   = dpi / 72
     pdf_doc = pdfium.PdfDocument(str(pdf_path))
     try:
         total  = len(pdf_doc)
@@ -147,13 +147,12 @@ def batch_convert(
     total_files = len(pdf_files)
     print(f"Batch mode — {total_files} PDF file(s) found in '{folder}'.\n")
 
-    # Outer progress bar — one tick per file
     for pdf_file in tqdm(pdf_files, desc="Overall progress", unit="file", position=0):
         out = str(Path(output_folder) / pdf_file.stem) if output_folder else None
         pdf_to_jpg(
             str(pdf_file),
             out,
-            None,       # output_name — defaults to PDF stem
+            None,
             per_page,
             dpi,
             quality,
@@ -167,7 +166,7 @@ def batch_convert(
 # CLI
 # ---------------------------------------------------------------------------
 
-if __name__ == "__main__":
+def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
             "Convert PDF pages to JPG image(s).  Requires: pypdfium2, Pillow, tqdm\n"
@@ -179,18 +178,18 @@ if __name__ == "__main__":
         epilog=(
             "examples:\n"
             "  # Single file — all pages combined into one JPG\n"
-            "  python pdf-to-jpg.py report.pdf\n"
+            "  pdf-to-jpg report.pdf\n"
             "             → report/report.jpg\n\n"
             "  # Single file — one JPG per page\n"
-            "  python pdf-to-jpg.py report.pdf -p\n"
+            "  pdf-to-jpg report.pdf -p\n"
             "             → report/report_1.jpg, report_2.jpg, …\n\n"
             "  # Single file — custom name and settings\n"
-            "  python pdf-to-jpg.py report.pdf -p --name invoice --dpi 200 --quality 85\n\n"
+            "  pdf-to-jpg report.pdf -p --name invoice --dpi 200 --quality 85\n\n"
             "  # Batch — convert all PDFs in a folder\n"
-            "  python pdf-to-jpg.py ./invoices/\n"
+            "  pdf-to-jpg ./invoices/\n"
             "             → invoices/jan/jan.jpg, invoices/feb/feb.jpg, …\n\n"
             "  # Batch — all PDFs in folder, per-page, custom output dir\n"
-            "  python pdf-to-jpg.py ./invoices/ ./output/ -p --dpi 200"
+            "  pdf-to-jpg ./invoices/ ./output/ -p --dpi 200"
         ),
     )
     parser.add_argument(
@@ -227,7 +226,6 @@ if __name__ == "__main__":
     input_path = Path(args.input)
 
     if input_path.is_dir():
-        # ── Batch mode ──────────────────────────────────────────────────────
         if args.output_name:
             print("Warning: --name is ignored in batch mode.")
         batch_convert(
@@ -238,7 +236,6 @@ if __name__ == "__main__":
             args.quality,
         )
     else:
-        # ── Single file mode ─────────────────────────────────────────────────
         pdf_to_jpg(
             str(input_path),
             args.output_folder,
@@ -247,3 +244,7 @@ if __name__ == "__main__":
             args.dpi,
             args.quality,
         )
+
+
+if __name__ == "__main__":
+    main()

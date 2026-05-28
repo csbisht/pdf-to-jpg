@@ -12,6 +12,7 @@ __pycache__/
 .eggs/
 
 # Virtual environments
+myenv/
 .venv/
 venv/
 env/
