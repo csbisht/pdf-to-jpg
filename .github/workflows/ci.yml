@@ -14,7 +14,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os:
+          - ubuntu-latest
+          # - windows-latest   # 2× cost — uncomment to enable
+          # - macos-latest     # 10× cost — uncomment to enable
         python-version: [ "3.9", "3.10", "3.11", "3.12" ]
 
     steps:
