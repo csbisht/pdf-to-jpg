@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/csbisht/pdf-to-jpg/blob/main/LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
-[![CI](https://github.com/csbisht/pdf-to-jpg/actions/workflows/ci.yml/badge.svg)](https://github.com/csbisht/pdf-to-jpg/actions/workflows/ci.yml)
+[![CI](https://github.com/csbisht/pdf-to-jpg/actions/workflows/ci.yml/badge.svg?event=pull_request)](https://github.com/csbisht/pdf-to-jpg/actions/workflows/ci.yml)
 
 A lightweight command-line tool that converts any PDF file into JPG image(s)
 using three dependencies — [pypdfium2](https://pypdfium2.readthedocs.io/), [Pillow](https://python-pillow.org/), and [tqdm](https://tqdm.github.io/).
