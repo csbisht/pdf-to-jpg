@@ -299,7 +299,19 @@ Your prompt will change to show `(myenv)` — this confirms the environment is a
 
 ---
 
-### Step 3 — Run the script
+### Step 3 — Install all dependencies
+
+> ⚠️ Only needed **once** after creating the virtual environment. Skip this step if you have already run it before.
+
+```bash
+pip install -r requirements.txt
+```
+
+This installs the three packages the tool needs (pypdfium2, Pillow, tqdm) into your virtual environment.
+
+---
+
+### Step 4 — Run the script
 
 **Most common use — all pages combined into one JPG:**
 ```bash
@@ -340,7 +352,7 @@ python3 pdf-to-jpg.py --help
 
 ---
 
-### Step 4 — Deactivate or exit from the virtual environment when you are done with PDF to JPG conversion (optional)
+### Step 5 — Deactivate or exit from the virtual environment when you are done with PDF to JPG conversion (optional)
 
 ```bash
 deactivate
